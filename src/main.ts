@@ -70,7 +70,10 @@ export async function createApp(): Promise<INestApplication> {
 
 export async function bootstrap(): Promise<void> {
   const app = await createApp();
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8050;
+  const port = parseInt(process.env.PORT || '8050', 10);
+  if (!port) {
+    throw new Error('Missing required environment variable: PORT');
+  }
 
   process.on('unhandledRejection', (reason) => {
     console.error('Unhandled Rejection at:', reason);
