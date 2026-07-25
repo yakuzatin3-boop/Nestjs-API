@@ -1,4 +1,9 @@
-﻿import 'reflect-metadata';
+﻿import { webcrypto } from 'node:crypto';
+if (!globalThis.crypto) {
+  (globalThis as any).crypto = webcrypto;
+}
+
+import 'reflect-metadata';
 import { ValidationPipe, INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -65,7 +70,7 @@ export async function createApp(): Promise<INestApplication> {
 
 export async function bootstrap(): Promise<void> {
   const app = await createApp();
-  const port = process.env.PORT || 8050;
+  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8050;
 
   process.on('unhandledRejection', (reason) => {
     console.error('Unhandled Rejection at:', reason);
@@ -76,10 +81,10 @@ export async function bootstrap(): Promise<void> {
     setTimeout(() => process.exit(1), 100);
   });
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
-  console.log(`🚀 Server running on: http://localhost:${port}`);
-  console.log(`📦 API: http://localhost:${port}/api`);
+  console.log(`🚀 Server running on: http://0.0.0.0:${port}`);
+  console.log(`📦 API: http://0.0.0.0:${port}/api`);
 }
 
 if (process.env.VERCEL !== '1') {
