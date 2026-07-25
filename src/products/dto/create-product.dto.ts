@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsIn,
   ValidateNested,
   IsMongoId
 } from 'class-validator';
@@ -22,6 +23,18 @@ export class CreateProductDto {
 
   @IsNumber()
   price: number;
+
+  @IsNumber()
+  @IsOptional()
+  originalprice?: number;
+
+  @IsOptional()
+  @IsIn(['none', 'percentage', 'fixed'])
+  discountType?: 'none' | 'percentage' | 'fixed';
+
+  @IsOptional()
+  @IsNumber()
+  discountValue?: number;
 
   @IsNumber()
   stock: number;

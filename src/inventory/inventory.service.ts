@@ -1,0 +1,2 @@
+import { Injectable } from '@nestjs/common'; import { InjectModel } from '@nestjs/mongoose'; import { Model } from 'mongoose'; import { Product, ProductDocument } from '../products/schemas/product.schema';
+@Injectable() export class InventoryService { constructor(@InjectModel(Product.name) private readonly products: Model<ProductDocument>) {} findAll() { return this.products.find().populate('category', 'name').populate('brand', 'name').sort({ stock: 1 }).exec(); } }

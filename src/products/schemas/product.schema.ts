@@ -52,7 +52,7 @@ export class Product {
   name: string;
 
   @Prop({
-    required: true
+    required: true,
   })
   description: string;
 
@@ -62,9 +62,19 @@ export class Product {
   price: number;
 
   @Prop({
-    required: true
+    required: true,
+    default: 0,
   })
   originalprice: number;
+
+  @Prop({ enum: ['none', 'percentage', 'fixed'], default: 'none' })
+  discountType: 'none' | 'percentage' | 'fixed';
+
+  @Prop({ default: 0, min: 0 })
+  discountValue: number;
+
+  @Prop({ default: 0, min: 0 })
+  salePrice: number;
 
   // Swapped out old electronic properties for the clean subdocument layout
   @Prop({ type: ProductSpecificationSchema })
@@ -121,9 +131,9 @@ export class Product {
   @Prop({
     type: Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,
   })
-  createdBy: Types.ObjectId;
+  createdBy?: Types.ObjectId;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

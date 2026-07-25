@@ -63,4 +63,8 @@ export class OrdersService {
       .sort({ createdAt: -1 })
       .exec();
   }
+
+  async getAllOrders(): Promise<OrderDocument[]> {
+    return this.order.find().populate('user', 'email').sort({ createdAt: -1 }).exec();
+  }
 }

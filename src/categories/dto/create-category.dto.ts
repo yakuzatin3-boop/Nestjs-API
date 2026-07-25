@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsString, isString } from "class-validator";
+import { IsBoolean, IsOptional, IsString, IsMongoId } from "class-validator";
 
 export class CreateCategoryDto{
     @IsString()
@@ -10,6 +10,10 @@ export class CreateCategoryDto{
     @IsOptional()
     @IsString()
     image?:string;
+
+    @IsOptional()
+    @IsMongoId()
+    brand?: string;
 
     @IsOptional()
     @IsString()

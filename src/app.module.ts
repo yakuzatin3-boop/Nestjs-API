@@ -11,6 +11,11 @@ import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { CartsModule } from './carts/carts.module';
 import { PaymentsModule } from './payments/payments.module';
+import { CustomerModule } from './customer/customer.module';
+import { SuppliersModule } from './suppliers/suppliers.module';
+import { PurchasesModule } from './purchases/purchases.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -40,7 +45,12 @@ import { PaymentsModule } from './payments/payments.module';
     AuthModule,
     OrdersModule,
     CartsModule,
-    PaymentsModule
+    PaymentsModule,
+    CustomerModule,
+    SuppliersModule,
+    PurchasesModule,
+    InventoryModule,
+    ReportsModule
   ],
 
   controllers: [AppController],

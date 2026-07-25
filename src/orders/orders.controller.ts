@@ -1,4 +1,4 @@
-import { Controller, Post, Get, HttpCode, Body, HttpStatus  } from '@nestjs/common';
+import { Controller, Post, Get, HttpCode, Body, HttpStatus, Query  } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { OrderDocument } from './schemas/order.schema';
 import { User } from '../users/schemas/user.schema';
@@ -19,8 +19,13 @@ export class OrdersController {
     }
 
     // get the order 
+    @Get()
+    async findAll(): Promise<OrderDocument[]>{
+        return this.orderService.getAllOrders();
+    }
+
     @Get('history')
-    async getOrderHistory( @Body('userId') userId:string ): Promise<OrderDocument[]>{
+    async getOrderHistory(@Query('userId') userId:string ): Promise<OrderDocument[]>{
         return this.orderService.getUserOrders(userId);
     }
 }

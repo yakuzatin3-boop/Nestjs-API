@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
@@ -29,16 +30,28 @@
     "@nestjs/mongoose": "^11.0.4",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@tanstack/react-query": "^5.101.3",
     "axios": "^1.18.1",
     "bakong-khqr": "^1.0.20",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "lucide-react": "^1.25.0",
     "mongoose": "^9.7.4",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "react-hook-form": "^7.82.0",
+    "react-icons": "^5.7.0",
+    "react-loading-skeleton": "^3.5.0",
+    "recharts": "^3.10.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "sonner": "^2.0.7",
+    "typeorm": "^1.1.0",
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -33,10 +33,10 @@ Model<ProductDocument>
 async create(
 createProductDto:CreateProductDto
 ){
-
-
-const product =
-new this.productModel(createProductDto);
+const price = createProductDto.price;
+const value = createProductDto.discountValue || 0;
+const salePrice = createProductDto.discountType === 'percentage' ? price * Math.max(0, 1 - value / 100) : createProductDto.discountType === 'fixed' ? Math.max(0, price - value) : price;
+const product = new this.productModel({ ...createProductDto, salePrice });
 
 
 return product.save();
@@ -101,9 +101,7 @@ return this.productModel.find(filter);
 
 
 async findOne(id:string){
-
-
-return this.productModel.find()
+return this.productModel.findById(id)
 .populate("brand")
 .populate("category");
 
@@ -117,17 +115,13 @@ id:string,
 updateProductDto:UpdateProductDto
 ){
 
-
-return this.productModel.findByIdAndUpdate(
-
-id,
-updateProductDto,
-
-{
-new:true
-}
-
-);
+const existing = await this.productModel.findById(id);
+if (!existing) return null;
+const price = updateProductDto.price ?? existing.price;
+const type = updateProductDto.discountType ?? existing.discountType;
+const value = updateProductDto.discountValue ?? existing.discountValue ?? 0;
+const salePrice = type === 'percentage' ? price * Math.max(0, 1 - value / 100) : type === 'fixed' ? Math.max(0, price - value) : price;
+return this.productModel.findByIdAndUpdate(id, { ...updateProductDto, salePrice }, { new: true });
 
 
 }
