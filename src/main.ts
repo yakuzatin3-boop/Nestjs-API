@@ -1,16 +1,22 @@
-import { ValidationPipe } from '@nestjs/common';
+﻿import 'reflect-metadata';
+import { ValidationPipe, INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+export async function createApp(): Promise<INestApplication> {
+  if (!process.env.MONGODB_URI) {
+    throw new Error('Missing required environment variable: MONGODB_URI');
+  }
+
   const app = await NestFactory.create(AppModule);
 
-  // Global API prefix
   app.setGlobalPrefix('api');
 
-  // CORS Configuration
-  // Allow flexible origins for local development. Use CORS_ORIGINS env var
-  // as a comma separated list (e.g. http://localhost:3000,http://localhost:3001)
+  console.log('Vercel:', process.env.VERCEL === '1');
+  console.log('MONGODB_URI set:', !!process.env.MONGODB_URI);
+  console.log('JWT_SECRET set:', !!process.env.JWT_SECRET);
+  console.log('CORS_ORIGINS:', process.env.CORS_ORIGINS || '(default)');
+
   const rawOrigins = process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:3001';
   const allowedOrigins = rawOrigins.split(',').map((s) => s.trim()).filter(Boolean);
 
@@ -18,7 +24,6 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      // Allow non-browser (server-to-server / curl) requests with no origin
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
       return callback(new Error('Origin not allowed by CORS'));
@@ -28,9 +33,6 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  // Extra middleware to ensure the CORS headers are set reliably for
-  // requests coming from the frontend dev servers. This mirrors the
-  // allowlist above and handles preflight responses.
   app.use((req: any, res: any, next: any) => {
     const origin = req.headers.origin as string | undefined;
     if (origin && allowedOrigins.includes(origin)) {
@@ -46,7 +48,6 @@ async function bootstrap() {
     return next();
   });
 
-  // Global Validation
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -58,7 +59,22 @@ async function bootstrap() {
     }),
   );
 
+  await app.init();
+  return app;
+}
+
+export async function bootstrap(): Promise<void> {
+  const app = await createApp();
   const port = process.env.PORT || 8050;
+
+  process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled Rejection at:', reason);
+  });
+
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    setTimeout(() => process.exit(1), 100);
+  });
 
   await app.listen(port);
 
@@ -66,4 +82,6 @@ async function bootstrap() {
   console.log(`📦 API: http://localhost:${port}/api`);
 }
 
-bootstrap();
+if (process.env.VERCEL !== '1') {
+  bootstrap();
+}
