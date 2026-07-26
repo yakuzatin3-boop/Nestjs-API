@@ -5,6 +5,7 @@ export type CustomerDocument = HydratedDocument<Customer>;
 
 @Schema({ _id: false })
 export class Address {
+
   @Prop({ required: true })
   street: string;
 
@@ -24,40 +25,72 @@ export class Address {
   isDefault: boolean;
 }
 
-const AddressSchema = SchemaFactory.createForClass(Address);
+export const AddressSchema = SchemaFactory.createForClass(Address);
+
+
 
 @Schema({ timestamps: true })
 export class Customer {
-  // Relation to the User account
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true, unique: true })
-  userId: Types.ObjectId;
 
-  @Prop({ required: true, trim: true })
+  // Link to User account
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true,
+  })
+  user: Types.ObjectId;
+
+
+  // Customer information
+  @Prop({
+    required: true,
+    trim: true,
+  })
   firstName: string;
 
-  @Prop({ required: true, trim: true })
+
+  @Prop({
+    required: true,
+    trim: true,
+  })
   lastName: string;
 
-  @Prop({ required: true, unique: true, lowercase: true, trim: true })
-  email: string;
 
   @Prop()
   phoneNumber?: string;
 
-  @Prop({ type: [AddressSchema], default: [] })
+
+  @Prop({
+    type: [AddressSchema],
+    default: [],
+  })
   addresses: Address[];
 
-  @Prop({ default: 0 })
+
+  // Statistics
+  @Prop({
+    default: 0,
+  })
   totalOrders: number;
 
-  @Prop({ default: 0 })
+
+  @Prop({
+    default: 0,
+  })
   totalSpent: number;
 
-  @Prop({ default: true })
+
+  @Prop({
+    default: true,
+  })
   isActive: boolean;
+
 
   @Prop()
   notes?: string;
 }
 
-export const CustomerSchema = SchemaFactory.createForClass(Customer);
+
+export const CustomerSchema =
+SchemaFactory.createForClass(Customer);

@@ -23,10 +23,10 @@ export class OrderItem {
 
 @Schema({ timestamps: true, collection: 'orders' })
 export class Order {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'Customer', required: true })
   customer: Types.ObjectId;
 
-  
+
   @Prop({ type: [SchemaFactory.createForClass(OrderItem)], required: true })
   items: OrderItem[];
 

@@ -29,7 +29,9 @@ export class CustomersService {
       userId: new Types.ObjectId(createCustomerDto.userId),
     });
     if (existingUser) {
-      throw new ConflictException('Customer profile already exists for this User');
+      throw new ConflictException(
+        'Customer profile already exists for this User',
+      );
     }
 
     const customer = new this.customerModel({
@@ -40,7 +42,10 @@ export class CustomersService {
     return await customer.save();
   }
 
-  async findAll(query?: { search?: string; isActive?: boolean }): Promise<Customer[]> {
+  async findAll(query?: {
+    search?: string;
+    isActive?: boolean;
+  }): Promise<Customer[]> {
     const filter: Record<string, any> = {};
 
     if (query?.search) {
@@ -90,13 +95,18 @@ export class CustomersService {
       .exec();
 
     if (!customer) {
-      throw new NotFoundException(`Customer record for User ID "${userId}" not found`);
+      throw new NotFoundException(
+        `Customer record for User ID "${userId}" not found`,
+      );
     }
 
     return customer;
   }
 
-  async update(id: string, updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
+  async update(
+    id: string,
+    updateCustomerDto: UpdateCustomerDto,
+  ): Promise<Customer> {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid customer ID');
     }

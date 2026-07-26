@@ -3,13 +3,19 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Order, OrderDocument } from './schemas/order.schema';
 import { CartService } from '../carts/carts.service';
+import { Customer, CustomerDocument } from '../customer/schema/customer.schema';
 
 @Injectable()
 export class OrdersService {
   constructor(
-    @InjectModel(Order.name) private readonly order: Model<OrderDocument>,
-    private readonly cartService: CartService, // Inject the CartService directly
-  ) {}
+  @InjectModel(Order.name)
+  private readonly order: Model<OrderDocument>,
+
+  @InjectModel(Customer.name)
+  private readonly customerModel: Model<CustomerDocument>,
+
+  private readonly cartService: CartService,
+) {}
 
  
   async createOrderFromCart(userId: string, paymentMethod: string): Promise<OrderDocument> {
@@ -42,14 +48,31 @@ export class OrdersService {
         priceAtPurchase: itemPrice, 
       } as any);
     }
-    const newOrder = new this.order({
-      user: new Types.ObjectId(userId),
-      items: orderItems,
-      totalAmount,
-      paymentMethod,
-      status: 'PENDING',
-    });
+    const customer = await this.customerModel.findOne({
+  user: new Types.ObjectId(userId)
+});
 
+
+if (!customer) {
+  throw new NotFoundException(
+    'Customer profile not found'
+  );
+}
+
+
+const newOrder = new this.order({
+
+  customer: customer._id,
+
+  items: orderItems,
+
+  totalAmount,
+
+  paymentMethod,
+
+  status: 'PENDING',
+
+});
     const savedOrder = await newOrder.save();
     await this.cartService.clearCart(userId);
 
@@ -57,14 +80,51 @@ export class OrdersService {
   }
 
   
-  async getUserOrders(userId: string): Promise<OrderDocument[]> {
-    return this.order
-      .find({ user: new Types.ObjectId(userId) })
-      .sort({ createdAt: -1 })
-      .exec();
+  async getUserOrders(
+  userId: string
+): Promise<OrderDocument[]> {
+
+  const customer =
+    await this.customerModel.findOne({
+      user: new Types.ObjectId(userId)
+    });
+
+
+  if (!customer) {
+    throw new NotFoundException(
+      'Customer not found'
+    );
   }
 
-  async getAllOrders(): Promise<OrderDocument[]> {
-    return this.order.find().populate('user', 'email').sort({ createdAt: -1 }).exec();
-  }
+
+  return this.order
+    .find({
+      customer: customer._id
+    })
+    .populate(
+      'customer',
+      'firstName lastName phoneNumber'
+    )
+    .populate(
+      'items.product'
+    )
+    .sort({
+      createdAt:-1
+    })
+    .exec();
+}
+
+  async getAllOrders(){
+
+ return this.order
+   .find()
+   .populate(
+     'customer',
+     'firstName lastName phoneNumber addresses'
+   )
+   .populate(
+     'items.product'
+   );
+
+}
 }
