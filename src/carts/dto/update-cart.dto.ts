@@ -1,10 +1,17 @@
-import { IsMongoId, IsNumber, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsMongoId, IsNumber, ValidateNested } from 'class-validator';
 
-export class UpdateCartDto {
+class CartItemDto {
   @IsMongoId()
-  productId: string;
+  product: string;
 
   @IsNumber()
-  @IsOptional()
-  quantity?: number;
+  quantity: number;
+}
+
+export class UpdateCartDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CartItemDto)
+  items: CartItemDto[];
 }

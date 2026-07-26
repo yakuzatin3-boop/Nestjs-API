@@ -96,7 +96,6 @@ export class CartService {
     return cart.save();
   }
 
-
 async updateCart(
   cartId: string,
   updateCartDto: UpdateCartDto,
@@ -108,20 +107,16 @@ async updateCart(
     throw new NotFoundException('Cart not found');
   }
 
-  const item = cart.items.find(
-    item => item.product.toString() === updateCartDto.productId
-  );
+  cart.items = updateCartDto.items.map(item => ({
+    product: item.product as any,
+    quantity: item.quantity,
+  }));
 
-  if (!item) {
-    throw new NotFoundException('Product not found in cart');
-  }
-
-  if (updateCartDto.quantity) {
-    item.quantity = updateCartDto.quantity;
-  }
-
-  return cart.save();
+  return await cart.save();
 }
+
+
+
   async clearCart(userId: string): Promise<void> {
     await this.cartModel.updateOne(
       { user: new Types.ObjectId(userId) }, 

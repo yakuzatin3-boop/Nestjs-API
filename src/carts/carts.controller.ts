@@ -15,7 +15,7 @@ import { CartService } from './carts.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { CartDocument } from './schemas/cart.schema';
 import { UpdateCartDto } from './dto/update-cart.dto';
-// 💡 Import your custom global authentication guards and decorators here
+// Import your custom global authentication guards and decorators here
 // import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 // import { CurrentUser } from '../common/decorators/current-user.decorator';
 
@@ -75,7 +75,8 @@ export class CartController {
     return this.cartService.removeItem(userId, productId);
   }
 
- @Put(':id')
+
+@Put(':id')
 async updateCart(
   @Param('id') cartId: string,
   @Body() updateCartDto: UpdateCartDto,
