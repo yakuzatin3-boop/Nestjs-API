@@ -3,92 +3,63 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type CustomerDocument = HydratedDocument<Customer>;
 
-@Schema({ _id: false })
-export class Address {
 
-  @Prop({ required: true })
-  street: string;
-
-  @Prop({ required: true })
-  city: string;
-
-  @Prop()
-  state?: string;
-
-  @Prop()
-  postalCode?: string;
-
-  @Prop({ required: true })
-  country: string;
-
-  @Prop({ default: false })
-  isDefault: boolean;
-}
-
-export const AddressSchema = SchemaFactory.createForClass(Address);
-
-
-
-@Schema({ timestamps: true })
+@Schema({ timestamps:true })
 export class Customer {
 
-  // Link to User account
   @Prop({
     type: Types.ObjectId,
-    ref: 'User',
-    required: true,
-    unique: true,
+    ref:'User',
+    required:true,
+    unique:true
   })
-  user: Types.ObjectId;
-
-
-  // Customer information
-  @Prop({
-    required: true,
-    trim: true,
-  })
-  firstName: string;
+  userId: Types.ObjectId;
 
 
   @Prop({
-    required: true,
-    trim: true,
+    required:true,
+    trim:true
   })
-  lastName: string;
+  firstName:string;
+
+
+  @Prop({
+    required:true,
+    trim:true
+  })
+  lastName:string;
+
+
+  @Prop({
+    required:true,
+    unique:true,
+    lowercase:true,
+    trim:true
+  })
+  email:string;
 
 
   @Prop()
-  phoneNumber?: string;
+  phoneNumber?:string;
 
 
   @Prop({
-    type: [AddressSchema],
-    default: [],
+    default:0
   })
-  addresses: Address[];
-
-
-  // Statistics
-  @Prop({
-    default: 0,
-  })
-  totalOrders: number;
+  totalOrders:number;
 
 
   @Prop({
-    default: 0,
+    default:0
   })
-  totalSpent: number;
+  totalSpent:number;
 
 
   @Prop({
-    default: true,
+    default:true
   })
-  isActive: boolean;
+  isActive:boolean;
 
-
-  @Prop()
-  notes?: string;
 }
 
 

@@ -35,9 +35,20 @@ export class CustomersService {
     }
 
     const customer = new this.customerModel({
-      ...createCustomerDto,
-      userId: new Types.ObjectId(createCustomerDto.userId),
-    });
+
+  userId: new Types.ObjectId(
+    createCustomerDto.userId
+  ),
+
+  firstName: createCustomerDto.firstName,
+
+  lastName: createCustomerDto.lastName,
+
+  email: createCustomerDto.email,
+
+  phoneNumber: createCustomerDto.phoneNumber
+
+});
 
     return await customer.save();
   }

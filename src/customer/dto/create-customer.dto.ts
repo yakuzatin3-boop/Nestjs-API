@@ -1,48 +1,37 @@
 import {
-  IsMongoId,
-  IsEmail,
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsBoolean,
-  IsArray,
-  ValidateNested,
+ IsNotEmpty,
+ IsMongoId,
+ IsString,
+ IsEmail,
+ IsOptional
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { AddressDto } from './address.dto';
+
 
 export class CreateCustomerDto {
-  @IsMongoId()
-  @IsNotEmpty()
-  userId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  firstName: string;
 
-  @IsString()
-  @IsNotEmpty()
-  lastName: string;
+ @IsNotEmpty()
+ @IsMongoId()
+ userId:string;
 
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
 
-  @IsString()
-  @IsOptional()
-  phoneNumber?: string;
+ @IsNotEmpty()
+ @IsString()
+ firstName:string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => AddressDto)
-  @IsOptional()
-  addresses?: AddressDto[];
 
-  @IsBoolean()
-  @IsOptional()
-  isActive?: boolean;
+ @IsNotEmpty()
+ @IsString()
+ lastName:string;
 
-  @IsString()
-  @IsOptional()
-  notes?: string;
+
+ @IsNotEmpty()
+ @IsEmail()
+ email:string;
+
+
+ @IsOptional()
+ @IsString()
+ phoneNumber?:string;
+
 }
