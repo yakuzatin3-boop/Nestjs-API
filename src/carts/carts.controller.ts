@@ -5,6 +5,7 @@ import {
   Patch, 
   Delete, 
   Body, 
+  Put,
   Param, 
   UseGuards, 
   HttpCode, 
@@ -13,12 +14,14 @@ import {
 import { CartService } from './carts.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { CartDocument } from './schemas/cart.schema';
+import { UpdateCartDto } from './dto/update-cart.dto';
 // 💡 Import your custom global authentication guards and decorators here
 // import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 // import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @Controller('carts')
-// @UseGuards(JwtAuthGuard) // 🔒 Protects all cart endpoints; requires user to be logged in
+// @UseGuards(JwtAuthGuard) 
+// // Protects all cart endpoints; requires user to be logged in
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
@@ -39,9 +42,9 @@ export class CartController {
    * Adds an item variant or increments an existing listing payload.
    */
   @Post('add')
-  @HttpCode(HttpStatus.OK) // Returns 200 OK instead of the default 201 Created for structural balance
+  @HttpCode(HttpStatus.OK) 
   async addToCart(
-    @Body('userId') userId: string, // Temporary placeholder; swap to @CurrentUser() when ready
+    @Body('userId') userId: string, 
     @Body() addToCartDto: AddToCartDto,
   ): Promise<CartDocument> {
     return this.cartService.addToCart(userId, addToCartDto);
@@ -72,6 +75,13 @@ export class CartController {
     return this.cartService.removeItem(userId, productId);
   }
 
+ @Put(':id')
+async updateCart(
+  @Param('id') cartId: string,
+  @Body() updateCartDto: UpdateCartDto,
+): Promise<CartDocument> {
+  return this.cartService.updateCart(cartId, updateCartDto);
+}
   /**
    * DELETE /api/v1/carts/clear
    * Wipes the entire inventory item list clean (used post-checkout).
