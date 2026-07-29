@@ -22,7 +22,7 @@ export async function createApp(): Promise<INestApplication> {
   console.log('JWT_SECRET set:', !!process.env.JWT_SECRET);
   console.log('CORS_ORIGINS:', process.env.CORS_ORIGINS || '(default)');
 
-  const rawOrigins = process.env.CORS_ORIGINS || 'http://localhost:3000,http://your-nextjs-app.vercel.app';
+  const rawOrigins = process.env.CORS_ORIGINS || 'http://localhost:5173, http://localhost:5174,http://localhost:3000,http://your-nextjs-app.vercel.app';
   const allowedOrigins = rawOrigins.split(',').map((s) => s.trim()).filter(Boolean);
 
   console.log('Allowed CORS origins:', allowedOrigins);
